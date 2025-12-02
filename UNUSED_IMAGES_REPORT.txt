@@ -1,0 +1,54 @@
+
+=== UNUSED PRODUCT IMAGES REPORT ===
+
+Generated: 2025-12-02 08:39:06
+
+SUMMARY:
+--------
+Total files in directory: 27
+Files used in products: 11
+Files used in archived: 0
+Total USED files: 10
+Total UNUSED files: 20
+Space wasted: 4.52 MB
+
+UNUSED FILES:
+-------------
+- 1638998298.jpg (79.22 KB)
+- 1638998349.jpg (29.55 KB)
+- 1638998678.jpg (230.13 KB)
+- 1639230128.jpg (89.66 KB)
+- 1639256401.png (643.48 KB)
+- 1642367646.jpg (198.7 KB)
+- 1642367737.jpg (259.62 KB)
+- 1643524417.jpg (53.93 KB)
+- 1764379088.png (1.66 MB)
+- 1764381615.png (76.3 KB)
+- abstract.jpg (20.78 KB)
+- code.jpeg (41.03 KB)
+- console.png (446.41 KB)
+- default.jpg (105.42 KB)
+- elegant.jpg (16.29 KB)
+- n2.jpg (33.53 KB)
+- n3.jpg (15.81 KB)
+- n3.png (168.53 KB)
+- placeholder.jpg (404.2 KB)
+- shiny.jpg (16.9 KB)
+
+LOCATION:
+---------
+C:\Users\Rob Martin\finalsWfeature\public\assets/images
+
+USED FILES (for reference):
+---------------------------
+- smartphone.png
+- laptop.png
+- shirt.jpg
+- watch.jpg
+- headphones.jpg
+- speaker.png
+- headphones.png
+- graphics.jpeg
+- smartwatch.png
+- shoes.png
+

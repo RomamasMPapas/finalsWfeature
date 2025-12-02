@@ -1,0 +1,144 @@
+body {
+   background-image: url(../images/abstract.jpg);
+   background-repeat: no-repeat;
+   background-size: cover;
+
+}
+
+/* products styles */
+.container .product_images {
+   width: auto;
+   object-fit: cover;
+   background-repeat: no-repeat;
+   background-size: cover;
+}
+
+.carousel-caption {
+   background-color: rgba(113, 127, 142, 0.25) !important;
+}
+
+.carousel-item {
+   text-align: center;
+}
+
+.trending,
+.cartlist {
+   margin-top: 100px !important;
+}
+
+.trending a,
+.cartlist a {
+   text-decoration: none;
+}
+
+.trending a .card {
+   /* border-radius: 0.4rem!important; */
+   border-color: transparent !important;
+}
+
+.trending .image-hover,
+.product-details .image-hover,
+.searched-product .image-hover {
+   max-width: 100% !important;
+   overflow: hidden;
+   position: relative;
+   width: 100%;
+   padding-top: 75%;
+   /* 4:3 Aspect Ratio */
+}
+
+.trending .image-hover img,
+.product-details .image-hover img,
+.searched-product .image-hover img {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100% !important;
+   height: 100% !important;
+   object-fit: contain;
+   object-position: center;
+   transition: 1s ease;
+}
+
+.trending .image-hover img:hover,
+.product-details .image-hover img:hover,
+.searched-product .image-hover img:hover {
+   /* transform: scale(0.1); */
+   /* width: 100% !important; */
+   transition: 1s ease;
+   transform: scale(1.1);
+}
+
+.details img {
+   width: 100% !important;
+   height: 100% !important;
+   background-repeat: inherit;
+   background-size: cover;
+}
+
+.details {
+   /* display:flex !important;
+    justify-content:center;
+    align-items: center; */
+   display: block !important;
+   text-align: center;
+}
+
+/* cartlist styles */
+.cartlist img {
+   height: 180px !important;
+}
+
+.cart-container .image-hover {
+   max-width: 100% !important;
+   overflow: hidden;
+}
+
+.cart-container .image-hover img {
+   object-fit: cover;
+   width: 100% !important;
+   transition: 1s ease;
+}
+
+.cart-container .image-hover img:hover {
+   /* transform: scale(0.1); */
+   /* width: 100% !important; */
+   transition: 1s ease;
+   transform: scale(1.2);
+}
+
+/* login and registration styles */
+.login-header {
+   border-radius: 5px;
+   font-weight: bolder;
+}
+
+/* footer styles */
+footer {
+   display: block;
+   text-align: center;
+   padding: 10px 0 2px 0;
+   position: relative;
+   width: 100%;
+   height: auto;
+   margin: 0;
+   bottom: 0;
+}
+
+footer p {
+   font-size: 14px;
+}
+
+a {
+   text-decoration: none !important;
+   /* color:white !important; */
+}
+
+.redirect-links>a {
+   color: white !important;
+}
+
+/* // pagination built in icon */
+.w-5 {
+   display: none;
+}
