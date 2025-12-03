@@ -92,4 +92,9 @@ class UserController extends Controller
 
         return back()->with('success', 'Profile updated successfully!');
     }
+    function forgotPassword(Request $req){
+        // Logic to send email would go here
+        // For now, just return a success message
+        return back()->with('success', 'If your email exists in our system, you will receive a password reset link shortly.');
+    }
 }

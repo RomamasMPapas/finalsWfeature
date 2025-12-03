@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SocialAuthController;
 use App\Models\Products_category;
 
 /*
@@ -57,21 +58,29 @@ Route::view('login','login');
 Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 
+Route::get('/forgot-password', function () {
+    return view('forgot-password');
+});
+Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
+
 // Social authentication routes
-Route::get('/auth/facebook', [App\Http\Controllers\SocialAuthController::class, 'redirectToFacebook'])->name('auth.facebook');
-Route::get('/auth/facebook/callback', [App\Http\Controllers\SocialAuthController::class, 'handleFacebookCallback']);
-Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('/auth/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback']);
+Route::get('/auth/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+Route::get('/auth/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
 
 // User profile routes
 Route::get('/profile', [UserController::class, 'profile'])->middleware('auth');
 Route::post('/profile/update', [UserController::class, 'updateProfile'])->middleware('auth')->name('profile.update');
+Route::get('/delivery', [ProductController::class, 'delivery'])->middleware('auth');
+Route::get('/cancel_order/{id}', [ProductController::class, 'cancel_order'])->middleware('auth');
 // admin routes
 Route::get('/admin',[AdminController::class,'index']);
 Route::post('/admin',[AdminController::class,'login']);
 Route::get('/dashboard',[AdminController::class,'admin_details']);
 // additional admin/product routes
 Route::post('/add-category',[ProductController::class,'add_category'])->name('add.category'); // add product category
+Route::get('/category-products/{name}',[ProductController::class,'products_by_category']); // show products by category
 Route::get('/manage-categories',[ProductController::class,'show_categories']); // manage product category
 Route::post('/add-product',[ProductController::class,'add_products']); // add product
 Route::post('/delete-cat',[ProductController::class,'delete_cat'])->name('delete.cat'); // delete category

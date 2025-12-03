@@ -2,97 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Exception;
+use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
     /**
-     * Redirect to Facebook OAuth
+     * Redirect the user to the OAuth Provider.
      */
+    public function redirect($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Obtain the user information from provider.
+     */
+    public function callback($provider)
+    {
+        $socialUser = Socialite::driver($provider)->user();
+        // Find or create a user
+        $user = User::firstOrCreate(
+            [
+                $provider . '_id' => $socialUser->getId(),
+            ],
+            [
+                'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? $socialUser->getEmail(),
+                'email' => $socialUser->getEmail(),
+                // password is not needed for social login; set a random one
+                'password' => bcrypt(str_random(16)),
+            ]
+        );
+        Auth::login($user);
+        return redirect('/');
+    }
+
+    // Specific methods for Facebook
     public function redirectToFacebook()
     {
-        return Socialite::driver('facebook')->redirect();
+        return $this->redirect('facebook');
     }
 
-    /**
-     * Handle Facebook callback
-     */
     public function handleFacebookCallback()
     {
-        try {
-            $facebookUser = Socialite::driver('facebook')->user();
-            
-            $user = $this->findOrCreateUser($facebookUser, 'facebook');
-            
-            Auth::login($user);
-            
-            return redirect('/')->with('success', 'Successfully logged in with Facebook!');
-            
-        } catch (Exception $e) {
-            return redirect('/login')->with('failure', 'Unable to login with Facebook. Please try again.');
-        }
+        return $this->callback('facebook');
     }
 
-    /**
-     * Redirect to Google OAuth
-     */
+    // Specific methods for Google
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return $this->redirect('google');
     }
 
-    /**
-     * Handle Google callback
-     */
     public function handleGoogleCallback()
     {
-        try {
-            $googleUser = Socialite::driver('google')->user();
-            
-            $user = $this->findOrCreateUser($googleUser, 'google');
-            
-            Auth::login($user);
-            
-            return redirect('/')->with('success', 'Successfully logged in with Google!');
-            
-        } catch (Exception $e) {
-            return redirect('/login')->with('failure', 'Unable to login with Google. Please try again.');
-        }
-    }
-
-    /**
-     * Find or create user from social provider
-     */
-    private function findOrCreateUser($socialUser, $provider)
-    {
-        // Check if user exists by email
-        $user = User::where('email', $socialUser->getEmail())->first();
-        
-        if ($user) {
-            // User exists, just return
-            return $user;
-        }
-        
-        // Create new user
-        $nameParts = explode(' ', $socialUser->getName(), 2);
-        $firstName = $nameParts[0] ?? $socialUser->getName();
-        $lastName = $nameParts[1] ?? '';
-        
-        $user = User::create([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'email' => $socialUser->getEmail(),
-            'password' => Hash::make(Str::random(24)), // Random password for social users
-            'phone' => '', // Will need to be filled later
-            'address' => '', // Will need to be filled later
-        ]);
-        
-        return $user;
+        return $this->callback('google');
     }
 }
+
+?>

@@ -71,9 +71,9 @@
                                             @foreach ($categories as $category)
                                             <tr class="delete_row">
                                                 <td>{{$count++}}</td>
-                                                <td>{{$category['name']}} </td>
+                                                <td><a href="/category-products/{{$category['name']}}">{{$category['name']}}</a> </td>
                                                 <td style="display:flex;">
-                                                    <a href="/edit-product/{{$category['id']}}">
+                                                    {{-- <a href="/edit-product/{{$category['id']}}"> --}}
                                                         <i class="fas fa-edit mr-2 text-primary"></i>
                                                     </a>
                                                     {{-- <a href="/delete-product/{{$category['id']}}">
