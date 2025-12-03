@@ -263,9 +263,8 @@
         if (paymentMethod === 'card' || paymentMethod === 'paypal') {
             Swal.fire({
                 title: 'Enter OTP',
-                html: 'For demo purposes, use code: <b>123456</b>',
                 input: 'text',
-                inputValue: '123456',
+                inputValue: '',
                 inputAttributes: {
                     autocapitalize: 'off'
                 },
