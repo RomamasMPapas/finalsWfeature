@@ -138,6 +138,10 @@ class ProductController extends Controller
         if (Auth::check()) {
             $user_id = Auth::id();
             $all_cart = Cart::where('user_id',$user_id)->get();
+            $otp = rand(100000, 999999);
+            // Generate a random delivery date between 3 to 7 days from now
+            $deliveryDate = \Carbon\Carbon::now()->addDays(rand(3, 7))->format('Y-m-d');
+
             foreach ($all_cart as $cart) {
                 $order = new Order;
                 $order->user_id = $cart['user_id'];
@@ -146,10 +150,49 @@ class ProductController extends Controller
                 $order->payment_method = $req->payment;
                 $order->payment_status = "pending";
                 $order->address = $req->address;
+                $order->otp = $otp;
+                $order->delivery_date = $deliveryDate;
                 $order->Save();
-                $all_cart = Cart::where('user_id',$user_id)->delete();
             }
-            return redirect('/');
+            Cart::where('user_id',$user_id)->delete();
+            return redirect('/delivery')->with('payment_success', 'Order placed successfully! Your OTP for offline use is: ' . $otp);
+        }
+        else{
+            return redirect('/login');
+        }
+    }
+
+    // display delivery page with user orders
+    function delivery(){
+        if (Auth::check()) {
+            $user_id = Auth::id();
+            $orders = DB::table('orders')
+                ->join('products', 'orders.product_id', '=', 'products.id')
+                ->where('orders.user_id', $user_id)
+                ->select('products.*', 'orders.*', 'orders.id as order_id')
+                ->orderBy('orders.created_at', 'desc')
+                ->get();
+            
+            return view('delivery', compact('orders'));
+        }
+        else{
+            return redirect('/login');
+        }
+    }
+
+    // cancel order
+    function cancel_order($id){
+        if (Auth::check()) {
+            $user_id = Auth::id();
+            $order = Order::where('id', $id)->where('user_id', $user_id)->first();
+            
+            if($order && $order->delivery_status != 'delivered'){
+                $order->delivery_status = 'cancelled';
+                $order->save();
+                return redirect('/delivery')->with('payment_success', 'Order cancelled successfully');
+            } else {
+                return redirect('/delivery')->with('error', 'Cannot cancel this order');
+            }
         }
         else{
             return redirect('/login');
@@ -189,6 +232,44 @@ class ProductController extends Controller
      
           $chart_data = json_encode($data);
         return view('manage-products', compact('orders','chart_data','count_orders','orders_delivered','form_categories','orders_inprogress','orders_cancelled','products'));            
+    }
+
+    // display products by category for admin
+    function products_by_category($category_name){
+        if(Session::has('admin')){
+            $products = Product::where('category', $category_name)->orderBy('id', 'desc')->paginate(10);
+            $form_categories = Products_category::all();
+            $orders = DB::table('orders')->
+            leftJoin('products','orders.product_id','=','products.id')->
+            orderBy('orders.id','desc')->limit(3)->get();
+            $count_orders = DB::table('orders')->count();
+            $orders_inprogress = DB::table('orders')->where('delivery_status','in progress')->count();
+            $orders_delivered = DB::table('orders')->where('delivery_status','delivered')->count();
+            $orders_cancelled = DB::table('orders')->where('delivery_status','cancelled')->count();
+            // records for chart - SQLite compatible
+            $record = Order::select(
+                \DB::raw("COUNT(*) as count"), 
+                \DB::raw("strftime('%w', created_at) as day_name"),
+                \DB::raw("strftime('%d', created_at) as day")
+            )
+            ->where('created_at', '>', Carbon::today()->subDay(60))
+            ->groupBy('day_name','day')
+            ->orderBy('day')
+            ->get();
+        
+            $data = [];
+        
+            foreach($record as $row) {
+                $data['label'][] = $row->day_name;
+                $data['data'][] = (int) $row->count;
+            }
+        
+            $chart_data = json_encode($data);
+            return view('manage-products', compact('orders','chart_data','count_orders','orders_delivered','form_categories','orders_inprogress','orders_cancelled','products'));
+        }
+        else {
+            return redirect('/admin');
+        }
     }
 
     // display archived products

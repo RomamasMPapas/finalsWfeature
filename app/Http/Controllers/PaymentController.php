@@ -46,38 +46,65 @@ class PaymentController extends Controller
     {
         try {
             $userId = Auth::id();
-            $metadata = json_decode($request->input('metadata'), true);
             
-            $order = new Order;
-            $order->first_name = $request->input('first_name');
-            $order->last_name = $request->input('last_name');
-            $order->status = 'pending';
-            $order->address = $request->input('address');
-            $order->user_id = $userId;
-            $order->product_id = $metadata['product_id'];
-            $order->payment_status = $paymentStatus;
-            $order->delivery_status = "in progress";
-            $order->payment_method = $paymentMethod;
-            $order->amount = $request->input('amount');
-            
-            if($order->save()){
-                // Delete from cart
-                Cart::where('product_id', $metadata['product_id'])->where('user_id', $userId)->delete();
-                
-                // Update product quantity
-                $product = Product::find($metadata['product_id']);
-                if($product) {
-                    $product->decrement('quantity', $metadata['quantity']);
-                    $product->save();
-                }
-                
-                return redirect('/')->with('payment_success', 'Order placed successfully! Payment method: ' . ucfirst($paymentMethod));
+            if(!$userId) {
+                return redirect('/login')->with('error', 'Please login to place an order');
             }
             
-            return redirect()->back()->with('error', 'Failed to process order. Please try again.');
+            $cartItems = Cart::where('user_id', $userId)->get();
+            
+            if($cartItems->isEmpty()) {
+                return redirect('/')->with('error', 'Your cart is empty');
+            }
+
+            $otp = rand(100000, 999999);
+            
+            // Generate a random delivery date between 3 to 7 days from now
+            $deliveryDate = \Carbon\Carbon::now()->addDays(rand(3, 7))->format('Y-m-d');
+
+            $orderCount = 0;
+            foreach($cartItems as $item) {
+                $order = new Order;
+                
+                // Get user data from request
+                $order->first_name = $request->input('first_name', '');
+                $order->last_name = $request->input('last_name', '');
+                $order->status = 'pending';
+                $order->address = $request->input('address', '');
+                $order->user_id = $userId;
+                $order->product_id = $item->product_id;
+                $order->payment_status = $paymentStatus;
+                $order->delivery_status = "in progress";
+                $order->payment_method = $paymentMethod;
+                $order->otp = $otp;
+                $order->delivery_date = $deliveryDate;
+                
+                // Fetch product price to be accurate
+                $product = Product::find($item->product_id);
+                $order->amount = $product ? $product->price : 0;
+
+                if($order->save()) {
+                    $orderCount++;
+                    
+                    // Update product quantity
+                    if($product && $product->quantity > 0) {
+                        $product->decrement('quantity', 1); 
+                    }
+                }
+            }
+            
+            // Clear cart only if orders were created successfully
+            if($orderCount > 0) {
+                Cart::where('user_id', $userId)->delete();
+                
+                return redirect('/delivery')->with('payment_success', 'Order placed successfully! ' . $orderCount . ' item(s) ordered. Payment method: ' . ucfirst($paymentMethod) . '. Your OTP: ' . $otp);
+            } else {
+                return redirect()->back()->with('error', 'Failed to create orders. Please try again.');
+            }
             
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            \Log::error('Order processing error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while processing your order: ' . $e->getMessage());
         }
     }
 

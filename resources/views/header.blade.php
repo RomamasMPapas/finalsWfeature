@@ -34,6 +34,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                     <a class="dropdown-item" href="/profile"><i class="fas fa-user mr-2"></i>My Profile</a>
+                    <a class="dropdown-item" href="/delivery"><i class="fas fa-truck mr-2"></i>Delivery</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
                 </div>

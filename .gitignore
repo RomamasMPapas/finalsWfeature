@@ -18,4 +18,4 @@ yarn-error.log
 # Gatsby
 /gatsby-frontend/node_modules
 /gatsby-frontend/.cache
-/gatsby-frontend/public
+/gatsby-frontend/public 

@@ -22,5 +22,15 @@
     <script src="{{ url('assets/js/bootstrap.min.js')}}"></script>
     <script src="{{ url('assets/js/popper.min.js')}}"></script>
     <script src="{{ url('assets/js/sweetalert2.min.js')}}"></script>
+    @if(Session::has('payment_success'))
+    <script>
+        Swal.fire({
+            title: 'Thank You!',
+            text: "{{ Session::get('payment_success') }}",
+            icon: 'success',
+            confirmButtonText: 'Continue Shopping'
+        });
+    </script>
+    @endif
 </body>
 </html>

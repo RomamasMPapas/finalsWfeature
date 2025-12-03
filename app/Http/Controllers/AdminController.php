@@ -16,6 +16,26 @@ class AdminController extends Controller
 {
     // ... (existing code)
 
+    // admin login view
+    public function index()
+    {
+        return view('admin');
+    }
+
+    // admin login logic
+    public function login(Request $req)
+    {
+        $admin = Admin::where(['email'=>$req->email])->first();
+        if(!$admin || !Hash::check($req->password,$admin->password))
+        {
+            return back()->with('failure', 'Username or password is not matched');
+        }
+        else{
+            $req->session()->put('admin',$admin);
+            return redirect('/dashboard');
+        }
+    }
+
     // fetch admin details and dashboard data
     public function admin_details()
     {

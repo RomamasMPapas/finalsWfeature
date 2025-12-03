@@ -313,6 +313,9 @@
                     <a href="/products" class="btn btn-outline-success btn-block mb-2">
                         <i class="fas fa-store mr-2"></i>Browse Products
                     </a>
+                    <a href="/forgot-password" class="btn btn-outline-warning btn-block mb-2">
+                        <i class="fas fa-key mr-2"></i>Forgot Password
+                    </a>
                     <a href="/logout" class="btn btn-outline-danger btn-block">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
                     </a>
