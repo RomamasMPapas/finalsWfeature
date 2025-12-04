@@ -38,26 +38,13 @@ RUN mkdir -p storage/framework/cache/data \
     bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
-<<<<<<< HEAD
-# Create SQLite database
-RUN touch database/database.sqlite && chmod 664 database/database.sqlite
-
-# Run migrations
-RUN php artisan migrate --force || true
-=======
 # Create SQLite database and set full permissions
 RUN touch database/database.sqlite && \
     chmod 777 database/database.sqlite && \
     chmod 777 database
->>>>>>> master
 
 # Expose port
 EXPOSE 8080
 
-<<<<<<< HEAD
-# Start Laravel server
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
-=======
 # Start Laravel server - fresh migration and seed
 CMD php artisan migrate:fresh --force --seed && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
->>>>>>> master
