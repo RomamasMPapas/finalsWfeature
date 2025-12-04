@@ -91,7 +91,7 @@ const CheckoutPage = () => {
 
     const handlePlaceOrder = () => {
         alert("Order placed successfully! Thank you for your purchase.")
-        navigate("/shop")
+        navigate("/delivery")
     }
 
     return (
@@ -337,7 +337,7 @@ const CheckoutPage = () => {
                 )}
 
                 <div className="text-center mt-4">
-                    <Link to="/shop">← Continue Shopping</Link>
+                    <Link to="/products">← Continue Shopping</Link>
                 </div>
             </div>
         </Layout>
