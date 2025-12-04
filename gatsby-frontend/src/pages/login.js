@@ -7,22 +7,42 @@ const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+    const API_URL = "https://finalswfeature.onrender.com"
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault()
+        setError("")
+        setLoading(true)
 
         if (!email || !password) {
             setError("Please enter both email and password")
+            setLoading(false)
             return
         }
 
-        // Simple validation - accept any email/password for demo
-        // In production, this would validate against the backend
-        if (email && password.length >= 4) {
-            localStorage.setItem("user", JSON.stringify({ email }))
-            navigate("/shop")
-        } else {
-            setError("Invalid credentials. Password must be at least 4 characters.")
+        try {
+            const response = await fetch(`${API_URL}/api/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+                localStorage.setItem("user", JSON.stringify(data.user))
+                navigate("/")
+            } else {
+                setError(data.message || "Invalid credentials")
+            }
+        } catch (err) {
+            console.error("Login error:", err)
+            setError("An error occurred. Please try again.")
+        } finally {
+            setLoading(false)
         }
     }
 
