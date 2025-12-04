@@ -25,7 +25,7 @@ class registerTest extends TestCase
         //     'email'=>'olalekan112@gmail.com',
         //     'phone'=>'12345678909',
         //     'password'=>'olami'
-        // ]);
+        // ]); hallo
         // // dd($user);
         // $user->assertStatus($user->status(),200);
         // $this->assertStatus(true);

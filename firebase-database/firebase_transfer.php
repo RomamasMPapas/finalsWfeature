@@ -6,14 +6,14 @@
 // and placed your Firebase service account JSON at the path defined in .env
 // (FIREBASE_SERVICE_ACCOUNT) or at 'firebase_service_account.json' in the project root.
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
 
 // ---------------------------------------------------------------------
 // 1️⃣ Load SQLite database (the same DB Laravel uses)
-$sqlitePath = __DIR__.'/database/database.sqlite';
+$sqlitePath = __DIR__.'/../database/database.sqlite';
 if (!file_exists($sqlitePath)) {
     die("❌ SQLite file not found at $sqlitePath\n");
 }
@@ -22,7 +22,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // ---------------------------------------------------------------------
 // 2️⃣ Initialise Firestore client
-$serviceAccountPath = getenv('FIREBASE_SERVICE_ACCOUNT') ?: __DIR__.'/firebase_service_account.json';
+$serviceAccountPath = getenv('FIREBASE_SERVICE_ACCOUNT') ?: __DIR__.'/../firebase_service_account.json';
 if (!file_exists($serviceAccountPath)) {
     die("❌ Service‑account JSON not found at $serviceAccountPath\n");
 }
