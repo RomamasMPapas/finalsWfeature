@@ -1,127 +1,137 @@
-import * as React from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
-
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
+import { Carousel } from "react-bootstrap"
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
+const API_URL = "https://finalswfeature.onrender.com"
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
+const IndexPage = () => {
+  const [products, setProducts] = useState([])
+  const [popularProducts, setPopularProducts] = useState([])
+  const [loading, setLoading] = useState(true)
 
-const moreLinks = [
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/products`)
+      const data = await response.json()
+      setProducts(data.products || [])
+      setPopularProducts(data.popular_products || [])
+    } catch (error) {
+      console.error("Error fetching products:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
-    </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+  const renderImage = (gallery) => {
+    if (!gallery) return "https://via.placeholder.com/300"
+    if (gallery.startsWith('http')) return gallery
+    return `${API_URL}/assets/images/${gallery}`
+  }
 
-/**
- * Head export to define metadata for the page
- *
- * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
- */
-export const Head = () => <Seo title="Home" />
+  return (
+    <Layout>
+      <Seo title="Home" />
+
+      <div className="container mt-3 mb-5">
+        <div className="jumbotron bg-light p-5 rounded mb-4">
+          <h1 className="display-4">Welcome to Our E-Commerce Store!</h1>
+          <p className="lead">Discover the best products at unbeatable prices. Shop now and enjoy exclusive deals.</p>
+          <hr className="my-4" />
+          <p>Explore our wide range of categories and find exactly what you're looking for.</p>
+        </div>
+
+        {/* Carousel */}
+        {products.length > 0 && (
+          <Carousel>
+            {products.slice(0, 4).map((product, index) => (
+              <Carousel.Item key={product.id}>
+                <Link to={`/product/${product.id}`}>
+                  <img
+                    className="d-block w-100"
+                    src={renderImage(product.gallery)}
+                    alt={product.name}
+                    style={{ height: "320px", objectFit: "contain", backgroundColor: "#333" }}
+                  />
+                  <Carousel.Caption>
+                    <h3 className="text-primary">{product.name}</h3>
+                    <p>{product.description}</p>
+                  </Carousel.Caption>
+                </Link>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        )}
+      </div>
+
+      {/* Trending Products */}
+      <div className="container-fluid mt-5 pt-5">
+        <h4 className="text-center text-secondary my-4">Trending Products</h4>
+        <div className="row justify-content-center px-4">
+          {loading ? (
+            <p>Loading products...</p>
+          ) : (
+            products.map(product => (
+              <div className="col-md-3 my-4" key={product.id}>
+                <Link to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
+                  <div className="card shadow rounded h-100" style={{ backgroundColor: "transparent", borderColor: "rgb(230, 230, 248)" }}>
+                    <div className="image-hover">
+                      <img
+                        className="card-img-top rounded"
+                        src={renderImage(product.gallery)}
+                        alt={product.name}
+                        style={{ height: "250px", objectFit: "cover" }}
+                      />
+                    </div>
+                    <div className="card-body">
+                      <h5 className="card-title text-secondary">{product.name}</h5>
+                      <p className="card-text text-muted">{product.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Popular Products */}
+      <div className="container-fluid mt-5">
+        <h4 className="text-center text-secondary my-4">Popular Products</h4>
+        <div className="row justify-content-center px-4">
+          {popularProducts.map(product => (
+            <div className="col-md-4 my-4" key={product.id}>
+              <Link to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
+                <div className="card shadow rounded h-100" style={{ backgroundColor: "transparent", borderColor: "rgb(230, 230, 248)" }}>
+                  <div className="image-hover">
+                    <img
+                      className="card-img-top rounded"
+                      src={renderImage(product.gallery)}
+                      alt={product.name}
+                      style={{ height: "250px", objectFit: "cover" }}
+                    />
+                  </div>
+                  <div className="card-body">
+                    <h5 className="card-title text-secondary">{product.name}</h5>
+                    <p className="card-text text-muted">
+                      {product.description?.length > 50
+                        ? product.description.substring(0, 50) + "..."
+                        : product.description}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Layout>
+  )
+}
 
 export default IndexPage
