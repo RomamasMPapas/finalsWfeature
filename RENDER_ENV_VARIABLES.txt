@@ -1,0 +1,39 @@
+# Environment Variables for Render
+
+Copy these values into Render's Environment Variables section:
+
+## Required Variables
+
+APP_NAME=finalsWfeature
+APP_ENV=production
+APP_KEY=base64:ZNbf/2B33WC/RCUQKa6zvlcRWq9pwDsSkDcrBIoRsfg=
+APP_DEBUG=false
+APP_URL=https://YOUR-RENDER-URL.onrender.com
+
+LOG_CHANNEL=stack
+LOG_LEVEL=error
+
+DB_CONNECTION=sqlite
+DB_DATABASE=/opt/render/project/src/database/database.sqlite
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+## Optional (can skip for now)
+MAIL_MAILER=smtp
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=
+MAIL_FROM_ADDRESS=
+MAIL_FROM_NAME=finalsWfeature
+
+## Instructions:
+1. In Render, go to Environment section
+2. Click "Add Environment Variable"
+3. Copy each line above (KEY=VALUE format)
+4. You'll update APP_URL after first deployment
