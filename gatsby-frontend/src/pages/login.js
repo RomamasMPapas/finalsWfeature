@@ -30,7 +30,7 @@ const LoginPage = () => {
             // In a real app, you'd save a token here.
             // For now, we'll just redirect.
             alert("Login Successful!")
-            navigate("/")
+            navigate("/shop")
         } else {
             setError("Invalid OTP. Please try again.")
         }
