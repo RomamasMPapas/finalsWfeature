@@ -27,6 +27,8 @@ const RegisterPage = () => {
         }
     }
 
+    const API_URL = "https://finalswfeature.onrender.com"
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
@@ -45,18 +47,30 @@ const RegisterPage = () => {
             return
         }
 
-        // For demo, save to localStorage and redirect
-        const user = {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            phone: formData.phone,
-            address: formData.address
-        }
+        try {
+            const response = await fetch(`${API_URL}/api/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            })
 
-        localStorage.setItem("user", JSON.stringify(user))
-        alert("Registration successful!")
-        navigate("/")
+            const data = await response.json()
+
+            if (data.success) {
+                localStorage.setItem("user", JSON.stringify(data.user))
+                alert("Registration successful!")
+                navigate("/")
+            } else {
+                setError(data.message || "Registration failed")
+            }
+        } catch (err) {
+            console.error("Registration error:", err)
+            setError("An error occurred. Please try again.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (

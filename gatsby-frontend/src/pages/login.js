@@ -62,8 +62,8 @@ const LoginPage = () => {
                                             placeholder="Enter your password"
                                         />
                                     </div>
-                                    <button type="submit" className="btn btn-primary w-100">
-                                        Login
+                                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                                        {loading ? "Logging in..." : "Login"}
                                     </button>
                                 </form>
 
