@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Link, navigate } from "gatsby"
-import Layout from "../components/layout"
-import Seo from "../components/seo"
+import Layout from "../../components/layout"
+import Seo from "../../components/seo"
 
 const API_URL = "https://finalswfeature.onrender.com"
 
