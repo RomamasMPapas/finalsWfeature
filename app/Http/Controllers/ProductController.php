@@ -634,8 +634,12 @@ class ProductController extends Controller
 
     public function apiProducts()
     {
-        $products = Product::all();
-        return response()->json($products);
+        $products = Product::inRandomOrder()->get();
+        $popular_products = Product::inRandomOrder()->limit(4)->get();
+        return response()->json([
+            'products' => $products,
+            'popular_products' => $popular_products
+        ]);
     }
 
     public function apiCategories()
