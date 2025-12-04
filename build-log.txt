@@ -1,0 +1,98 @@
+verbose set gatsby_log_level: "verbose"
+
+[2K[1A[2K[Gverbose set gatsby_executing_command: "build"
+
+[2K[1A[2K[Gverbose loading local command from: C:\Users\Rob
+Martin\finalsWfeature\gatsby-frontend\node_modules\gatsby\dist\commands\build.js
+
+[2K[1A[2K[Gverbose running command: build
+
+[2K[1A[2K[Gverbose Running build in "production" environment
+
+[2K[1A[2K[Gsuccess compile gatsby files - 23.692s
+
+[2K[1A[2K[Gsuccess load gatsby config - 0.169s
+
+[2K[1A[2K[Gverbose No adapter was found for the current environment. Skipping adapter
+initialization.
+
+[2K[1A[2K[Gsuccess load plugins - 3.014s
+
+[2K[1A[2K[Gsuccess onPreInit - 0.013s
+
+[2K[1A[2K[Gsuccess initialize cache - 0.379s
+
+[2K[1A[2K[Gsuccess copy gatsby files - 0.637s
+
+[2K[1A[2K[Gsuccess Compiling Gatsby Functions - 1.945s
+
+[2K[1A[2K[Gsuccess onPreBootstrap - 2.160s
+
+[2K[1A[2K[Gverbose Creating 7 worker
+
+[2K[1A[2K[Gsuccess createSchemaCustomization - 0.011s
+
+[2K[1A[2K[G
+ ERROR #11321  API.NODE.EXECUTION
+
+"internal-data-bridge" threw an error while running the sourceNodes lifecycle:
+
+"length" is outside of buffer bounds
+
+
+[2K[1A[2K[G
+[0m
+[0m  [0m[97m[41mError[0m[37m[41m:[0m[37m[41m [0m[97m[41mRangeError [ERR_BUFFER_OUT_OF_BOUNDS]: "length" is outside of buffer bo[0m
+  [0m[97m[41munds[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mbuffer[0m[90m:[0m[93m1066[0m[37m [0m[37mBuffer.utf8Write[0m
+[0m  [0m  [0m[90mnode:internal/buffer:1066:13[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mnode.cjs[0m[90m:[0m[93m1151[0m[37m [0m[37mPackr.encodeUtf8[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[msgpackr]/dist/node.cjs:1151:18[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mnode.cjs[0m[90m:[0m[93m1412[0m[37m [0m[37mpack[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[msgpackr]/dist/node.cjs:1412:15[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mnode.cjs[0m[90m:[0m[93m1737[0m[37m [0m[37mPackr.writeObject[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[msgpackr]/dist/node.cjs:1737:6[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mnode.cjs[0m[90m:[0m[93m1510[0m[37m [0m[37mpack[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[msgpackr]/dist/node.cjs:1510:7[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mnode.cjs[0m[90m:[0m[93m1247[0m[37m [0m[37mPackr.pack.encode[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[msgpackr]/dist/node.cjs:1247:6[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mindex.cjs[0m[90m:[0m[93m214[0m[37m [0m[37mwriteInstructions[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[lmdb]/dist/index.cjs:214:28[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mindex.cjs[0m[90m:[0m[93m726[0m[37m [0m[37mLMDBStore.put[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[lmdb]/dist/index.cjs:726:11[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mindex.cjs[0m[90m:[0m[93m1084[0m[37m [0m[37mLMDBStore.put[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[lmdb]/dist/index.cjs:1084:22[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mnodes.js[0m[90m:[0m[93m11[0m[37m [0m[37mupdateNodes[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[gatsby]/dist/datastore/lmdb/updates/nodes.js:11:24[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mlmdb-datastore.js[0m[90m:[0m[93m211[0m[37m [0m[37mupdateDataStore[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[gatsby]/dist/datastore/lmdb/lmdb-datastore.js:211:70[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mlmdb-datastore.js[0m[90m:[0m[93m254[0m[37m [0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[gatsby]/dist/datastore/lmdb/lmdb-datastore.js:254:7[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mmett.js[0m[90m:[0m[93m36[0m[37m [0m[37mmettEmitEachStar[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[gatsby]/dist/utils/mett.js:36:11[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[37mSet.forEach[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mmett.js[0m[90m:[0m[93m35[0m[37m [0m[37mObject.emit[0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[gatsby]/dist/utils/mett.js:35:17[0m
+[0m  [0m
+[0m  [0m[90m-[0m [0m[93mindex.js[0m[90m:[0m[93m123[0m[37m [0m
+[0m  [0m  [0m[90m[gatsby-frontend]/[gatsby]/dist/redux/index.js:123:11[0m
+[0m  [0m
+[0m
+
+[2K[1A[2K[Gnot finished source and transform nodes - 0.660s
+
