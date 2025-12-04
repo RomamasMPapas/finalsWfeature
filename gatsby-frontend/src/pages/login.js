@@ -6,8 +6,9 @@ import Seo from "../components/seo"
 const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-    const API_URL = "http://127.0.0.1:8000"
+    const API_URL = "https://finalswfeature.onrender.com"
 
     const handleLogin = async (e) => {
         e.preventDefault()

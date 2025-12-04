@@ -12,8 +12,12 @@ const CheckoutPage = () => {
     const [loading, setLoading] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState("cod")
 
-    // Use local API for testing OTP
-    const API_URL = "http://127.0.0.1:8000/api"
+    const API_URL = "https://finalswfeature.onrender.com/api"
+
+    const handleSkipOtp = () => {
+        // Demo mode: Skip OTP verification
+        setStep(4)
+    }
 
     // Sample cart items
     const cartItems = [
@@ -206,6 +210,14 @@ const CheckoutPage = () => {
                                             {loading ? "Sending..." : "Send OTP to Email"}
                                         </button>
                                     </form>
+
+                                    <button
+                                        className="btn btn-outline-secondary w-100 mt-2"
+                                        onClick={handleSkipOtp}
+                                    >
+                                        Skip Verification (Demo Mode)
+                                    </button>
+
                                     <button
                                         className="btn btn-link w-100 mt-2"
                                         onClick={() => { setStep(1); setError(""); setSuccess(""); }}
@@ -224,23 +236,23 @@ const CheckoutPage = () => {
                         <div className="col-md-5">
                             <div className="card shadow">
                                 <div className="card-header bg-warning text-dark text-center">
-                                    <h5 className="mb-0">🔒 Verify OTP</h5>
+                                    <h5 className="mb-0">🔐 OTP Verification</h5>
                                 </div>
                                 <div className="card-body p-4">
                                     <p className="text-center text-muted">
-                                        Enter the 5-digit code sent to <strong>{email}</strong>
+                                        Enter the OTP sent to <strong>{email}</strong>
                                     </p>
                                     <form onSubmit={handleVerifyOTP}>
                                         <div className="mb-3">
+                                            <label className="form-label">Enter OTP Code</label>
                                             <input
                                                 type="text"
                                                 className="form-control form-control-lg text-center"
                                                 value={otp}
                                                 onChange={(e) => setOtp(e.target.value)}
-                                                placeholder="XXXXX"
+                                                placeholder="• • • • •"
                                                 maxLength="5"
                                                 required
-                                                style={{ letterSpacing: "5px", fontSize: "24px" }}
                                             />
                                         </div>
                                         <button
@@ -251,11 +263,19 @@ const CheckoutPage = () => {
                                             {loading ? "Verifying..." : "Verify OTP"}
                                         </button>
                                     </form>
+
+                                    <button
+                                        className="btn btn-outline-secondary w-100 mt-2"
+                                        onClick={handleSkipOtp}
+                                    >
+                                        Skip Verification (Demo Mode)
+                                    </button>
+
                                     <button
                                         className="btn btn-link w-100 mt-2"
-                                        onClick={() => { setStep(2); setOtp(""); setError(""); setSuccess(""); }}
+                                        onClick={() => { setStep(2); setError(""); setSuccess(""); setOtp(""); }}
                                     >
-                                        ← Change Email
+                                        ← Change Email / Resend OTP
                                     </button>
                                 </div>
                             </div>
@@ -269,47 +289,64 @@ const CheckoutPage = () => {
                         <div className="col-md-6">
                             <div className="card shadow">
                                 <div className="card-header bg-success text-white text-center">
-                                    <h5 className="mb-0">Payment Method</h5>
+                                    <h5 className="mb-0">✓ Verified - Complete Payment</h5>
                                 </div>
                                 <div className="card-body p-4">
                                     <div className="alert alert-success">
-                                        <i className="fas fa-check-circle me-2"></i> Email Verified Successfully!
+                                        Email Verified: <strong>{email || "Demo User"}</strong>
                                     </div>
 
-                                    <h6 className="mb-3">Select Payment Method:</h6>
-
-                                    <div className="form-check mb-3 p-3 border rounded">
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="paymentMethod"
-                                            id="cod"
-                                            value="cod"
-                                            checked={paymentMethod === "cod"}
-                                            onChange={(e) => setPaymentMethod(e.target.value)}
-                                        />
-                                        <label className="form-check-label ms-2" htmlFor="cod">
-                                            <strong>Cash on Delivery (COD)</strong>
-                                            <p className="text-muted mb-0 small">Pay when you receive your order.</p>
-                                        </label>
+                                    <h6>Select Payment Method:</h6>
+                                    <div className="mb-3">
+                                        <div className="form-check">
+                                            <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                name="payment"
+                                                id="cod"
+                                                checked={paymentMethod === "cod"}
+                                                onChange={() => setPaymentMethod("cod")}
+                                            />
+                                            <label className="form-check-label" htmlFor="cod">
+                                                💵 Cash on Delivery
+                                            </label>
+                                        </div>
+                                        <div className="form-check">
+                                            <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                name="payment"
+                                                id="card"
+                                                checked={paymentMethod === "card"}
+                                                onChange={() => setPaymentMethod("card")}
+                                            />
+                                            <label className="form-check-label" htmlFor="card">
+                                                💳 Credit/Debit Card
+                                            </label>
+                                        </div>
+                                        <div className="form-check">
+                                            <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                name="payment"
+                                                id="paypal"
+                                                checked={paymentMethod === "paypal"}
+                                                onChange={() => setPaymentMethod("paypal")}
+                                            />
+                                            <label className="form-check-label" htmlFor="paypal">
+                                                🅿️ PayPal
+                                            </label>
+                                        </div>
                                     </div>
 
-                                    <div className="form-check mb-3 p-3 border rounded bg-light">
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name="paymentMethod"
-                                            id="card"
-                                            value="card"
-                                            disabled
-                                        />
-                                        <label className="form-check-label ms-2 text-muted" htmlFor="card">
-                                            <strong>Credit Card (Coming Soon)</strong>
-                                        </label>
+                                    <div className="card bg-light mb-3">
+                                        <div className="card-body">
+                                            <strong>Order Total: ${total}</strong>
+                                        </div>
                                     </div>
 
                                     <button
-                                        className="btn btn-primary w-100 btn-lg mt-3"
+                                        className="btn btn-primary btn-lg w-100"
                                         onClick={handlePlaceOrder}
                                     >
                                         Place Order

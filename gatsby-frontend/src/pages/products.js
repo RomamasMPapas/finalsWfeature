@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
-const API_URL = "https://finalswfeature.onrender.com"
+const API_URL = "http://127.0.0.1:8000"
 
 const ProductsPage = () => {
     const [products, setProducts] = useState([])
