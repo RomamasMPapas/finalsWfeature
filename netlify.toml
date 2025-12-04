@@ -1,0 +1,7 @@
+[build]
+  base = "gatsby-frontend"
+  command = "npm run build"
+  publish = "public"
+
+[context.production.environment]
+  NODE_VERSION = "18"
