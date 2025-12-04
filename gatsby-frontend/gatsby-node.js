@@ -4,15 +4,19 @@
  * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/
  */
 
-/**
- * @type {import('gatsby').GatsbyNode['createPages']}
- */
+// No build-time data fetching - all data is fetched client-side
 exports.createPages = async ({ actions }) => {
-  const { createPage } = actions
-  createPage({
-    path: "/using-dsg",
-    component: require.resolve("./src/templates/using-dsg.js"),
-    context: {},
-    defer: true,
+  // Empty - we use client-side routing with file-based pages
+}
+
+// Prevent build failures from missing images
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      fallback: {
+        fs: false,
+        path: false,
+      },
+    },
   })
 }
