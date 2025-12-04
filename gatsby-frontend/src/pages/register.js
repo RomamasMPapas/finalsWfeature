@@ -27,7 +27,7 @@ const RegisterPage = () => {
         }
     }
 
-    const API_URL = "https://finalswfeature.onrender.com"
+    const API_URL = "http://127.0.0.1:8000"
 
     const handleSubmit = async (e) => {
         e.preventDefault()
