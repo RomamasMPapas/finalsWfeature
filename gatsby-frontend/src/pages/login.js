@@ -10,7 +10,7 @@ const LoginPage = () => {
     const [error, setError] = useState("")
 
     // valid OTPs as requested
-    const validOtps = ["81506", "13579", "152080", "250342", "525373"]
+    const validOtps = ["81506", "13579", "15208", "20342", "52533"]
 
     const handleSendOtp = (e) => {
         e.preventDefault()

@@ -169,6 +169,7 @@ class ProductController extends Controller
             $orders = DB::table('orders')
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->where('orders.user_id', $user_id)
+                ->where('orders.delivery_status', '!=', 'cancelled')
                 ->select('products.*', 'orders.*', 'orders.id as order_id')
                 ->orderBy('orders.created_at', 'desc')
                 ->get();
