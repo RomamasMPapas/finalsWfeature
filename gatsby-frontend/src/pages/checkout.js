@@ -4,13 +4,15 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 
 const CheckoutPage = () => {
-    const [step, setStep] = useState(1) // 1: Order Summary, 2: OTP Verification, 3: Payment
+    const [step, setStep] = useState(1) // 1: Order Summary, 2: Email Entry, 3: OTP Verification, 4: Payment
+    const [email, setEmail] = useState("")
     const [otp, setOtp] = useState("")
     const [error, setError] = useState("")
+    const [success, setSuccess] = useState("")
+    const [loading, setLoading] = useState(false)
     const [paymentMethod, setPaymentMethod] = useState("cod")
 
-    // Valid OTPs
-    const validOtps = ["81506", "13579", "15208", "20342", "52533"]
+    const API_URL = "https://finalswfeature.onrender.com/api"
 
     // Sample cart items
     const cartItems = [
@@ -20,18 +22,70 @@ const CheckoutPage = () => {
 
     const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
 
-    const handleProceedToOTP = () => {
+    const handleProceedToEmail = () => {
         setStep(2)
         setError("")
     }
 
-    const handleVerifyOTP = (e) => {
+    const handleSendOTP = async (e) => {
         e.preventDefault()
-        if (validOtps.includes(otp)) {
-            setError("")
-            setStep(3)
-        } else {
-            setError("Invalid OTP. Please try again.")
+        setLoading(true)
+        setError("")
+
+        try {
+            const response = await fetch(`${API_URL}/send-otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ email })
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+                setSuccess("OTP sent to your email! Check your inbox.")
+                setStep(3)
+            } else {
+                setError(data.message || "Failed to send OTP")
+            }
+        } catch (err) {
+            setError("Network error. Please try again.")
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleVerifyOTP = async (e) => {
+        e.preventDefault()
+        setLoading(true)
+        setError("")
+
+        try {
+            const response = await fetch(`${API_URL}/verify-otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ email, otp })
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+                setSuccess("OTP Verified!")
+                setStep(4)
+            } else {
+                setError(data.message || "Invalid OTP")
+            }
+        } catch (err) {
+            setError("Network error. Please try again.")
+            console.error(err)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -55,17 +109,23 @@ const CheckoutPage = () => {
                             <div className={`px-3 py-2 rounded-circle ${step >= 2 ? 'bg-primary text-white' : 'bg-secondary text-white'}`}>2</div>
                             <div className="align-self-center mx-2">—</div>
                             <div className={`px-3 py-2 rounded-circle ${step >= 3 ? 'bg-primary text-white' : 'bg-secondary text-white'}`}>3</div>
+                            <div className="align-self-center mx-2">—</div>
+                            <div className={`px-3 py-2 rounded-circle ${step >= 4 ? 'bg-primary text-white' : 'bg-secondary text-white'}`}>4</div>
                         </div>
                         <div className="d-flex justify-content-center mt-2">
-                            <small className="mx-3">Order</small>
-                            <small className="mx-4">OTP</small>
-                            <small className="mx-3">Payment</small>
+                            <small className="mx-2">Order</small>
+                            <small className="mx-3">Email</small>
+                            <small className="mx-3">OTP</small>
+                            <small className="mx-2">Payment</small>
                         </div>
                     </div>
                 </div>
 
                 {error && (
                     <div className="alert alert-danger text-center">{error}</div>
+                )}
+                {success && (
+                    <div className="alert alert-success text-center">{success}</div>
                 )}
 
                 {/* Step 1: Order Summary */}
@@ -103,7 +163,7 @@ const CheckoutPage = () => {
                                     </table>
                                     <button
                                         className="btn btn-primary w-100"
-                                        onClick={handleProceedToOTP}
+                                        onClick={handleProceedToEmail}
                                     >
                                         Proceed to Verification
                                     </button>
@@ -113,8 +173,52 @@ const CheckoutPage = () => {
                     </div>
                 )}
 
-                {/* Step 2: OTP Verification */}
+                {/* Step 2: Email Entry */}
                 {step === 2 && (
+                    <div className="row justify-content-center">
+                        <div className="col-md-5">
+                            <div className="card shadow">
+                                <div className="card-header bg-info text-white text-center">
+                                    <h5 className="mb-0">📧 Enter Your Email</h5>
+                                </div>
+                                <div className="card-body p-4">
+                                    <p className="text-center text-muted">
+                                        We'll send an OTP to your email for payment verification.
+                                    </p>
+                                    <form onSubmit={handleSendOTP}>
+                                        <div className="mb-3">
+                                            <label className="form-label">Email Address</label>
+                                            <input
+                                                type="email"
+                                                className="form-control form-control-lg"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="your-email@gmail.com"
+                                                required
+                                            />
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-primary w-100"
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Sending..." : "Send OTP to Email"}
+                                        </button>
+                                    </form>
+                                    <button
+                                        className="btn btn-link w-100 mt-2"
+                                        onClick={() => { setStep(1); setError(""); setSuccess(""); }}
+                                    >
+                                        ← Back to Order Summary
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 3: OTP Verification */}
+                {step === 3 && (
                     <div className="row justify-content-center">
                         <div className="col-md-5">
                             <div className="card shadow">
@@ -123,7 +227,7 @@ const CheckoutPage = () => {
                                 </div>
                                 <div className="card-body p-4">
                                     <p className="text-center text-muted">
-                                        For security, please enter the OTP sent to your registered phone/email.
+                                        Enter the OTP sent to <strong>{email}</strong>
                                     </p>
                                     <form onSubmit={handleVerifyOTP}>
                                         <div className="mb-3">
@@ -135,20 +239,22 @@ const CheckoutPage = () => {
                                                 onChange={(e) => setOtp(e.target.value)}
                                                 placeholder="• • • • •"
                                                 maxLength="5"
+                                                required
                                             />
-                                            <small className="text-muted d-block mt-2 text-center">
-                                                Valid OTPs: 81506, 13579, 15208, 20342, 52533
-                                            </small>
                                         </div>
-                                        <button type="submit" className="btn btn-success w-100">
-                                            Verify OTP
+                                        <button
+                                            type="submit"
+                                            className="btn btn-success w-100"
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Verifying..." : "Verify OTP"}
                                         </button>
                                     </form>
                                     <button
                                         className="btn btn-link w-100 mt-2"
-                                        onClick={() => setStep(1)}
+                                        onClick={() => { setStep(2); setError(""); setSuccess(""); setOtp(""); }}
                                     >
-                                        ← Back to Order Summary
+                                        ← Change Email / Resend OTP
                                     </button>
                                 </div>
                             </div>
@@ -156,8 +262,8 @@ const CheckoutPage = () => {
                     </div>
                 )}
 
-                {/* Step 3: Payment */}
-                {step === 3 && (
+                {/* Step 4: Payment */}
+                {step === 4 && (
                     <div className="row justify-content-center">
                         <div className="col-md-6">
                             <div className="card shadow">
@@ -166,7 +272,7 @@ const CheckoutPage = () => {
                                 </div>
                                 <div className="card-body p-4">
                                     <div className="alert alert-success">
-                                        OTP Verified Successfully!
+                                        Email Verified: <strong>{email}</strong>
                                     </div>
 
                                     <h6>Select Payment Method:</h6>
